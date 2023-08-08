@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { promises as fs } from 'fs';
-import { defineConfig, externalizeDepsPlugin } from 'electron-vite';
+import { defineConfig, externalizeDepsPlugin, swcPlugin } from 'electron-vite';
 import type { ConfigEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
@@ -25,11 +25,14 @@ export default defineConfig(({ command, mode }: ConfigEnv) => {
           input: resolve('./src/main/app.ts'),
         },
       },
-      plugins: [externalizeDepsPlugin()],
+      plugins: [externalizeDepsPlugin(), swcPlugin()],
       resolve: {
-        alias: {}
+        alias: {
+          '#common': resolve('./src/common'),
+          $main: resolve('./src/main'),
+        },
       },
-      define: {}
+      define: {},
     },
     preload: {
       root: '.',
@@ -37,14 +40,16 @@ export default defineConfig(({ command, mode }: ConfigEnv) => {
         rollupOptions: {
           input: {
             login: resolve('./src/preload/login.ts'),
-          }
-        }
+          },
+        },
       },
       plugins: [externalizeDepsPlugin()],
       resolve: {
-        alias: {}
+        alias: {
+          '#common': resolve('./src/common'),
+        },
       },
-      define: {}
+      define: {},
     },
     renderer: {
       root: resolve('./src/renderer'),
@@ -52,8 +57,8 @@ export default defineConfig(({ command, mode }: ConfigEnv) => {
         rollupOptions: {
           input: {
             login: resolve('./src/renderer/login.html'),
-          }
-        }
+          },
+        },
       },
       plugins: [
         vue({
@@ -92,13 +97,26 @@ export default defineConfig(({ command, mode }: ConfigEnv) => {
           defaultImport: 'url',
         }),
       ],
+      server: {
+        port: 8200,
+        https: false,
+        host: true,
+        open: false,
+      },
+      css: {
+        devSourcemap: true,
+      },
       resolve: {
         alias: {
-        }
-      }
-    }
-  }
-})
+          '#common': resolve('./src/common'),
+          '@pages': resolve('./src/renderer/pages'),
+          '@shared': resolve('./src/renderer/shared'),
+        },
+      },
+      define: {},
+    },
+  };
+});
 
 function unpluginIconsPlugin() {
   /**

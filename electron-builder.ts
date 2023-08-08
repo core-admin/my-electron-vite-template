@@ -1,9 +1,12 @@
 import { Configuration as ElectronBuilderOptions } from 'electron-builder';
+import { appId } from './src/main/config/app';
+
+console.log('appId build', appId);
 
 function createBuilder(): ElectronBuilderOptions {
   return {
-    appId: 'com.xuke.electron-vite.desktop',
-    productName: 'electron-vite-desktop',
+    appId,
+    productName: '我的桌面应用',
     directories: {
       output: './dist-electron',
     },

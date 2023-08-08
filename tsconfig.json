@@ -15,13 +15,14 @@
     "resolveJsonModule": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "experimentalDecorators": true,
     "useDefineForClassFields": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
     "removeComments": true,
     "noEmit": true,
     "isolatedModules": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "lib": [
       "ESNext",
       "DOM",
@@ -31,6 +32,20 @@
       "naive-ui/volar",
       "unplugin-icons/types/vue"
     ],
+    "paths": {
+      "@pages/*": [
+        "src/renderer/pages/*"
+      ],
+      "@shared/*": [
+        "src/renderer/shared/*"
+      ],
+      "#common/*": [
+        "src/common/*"
+      ],
+      "$main/*": [
+        "src/main/*"
+      ]
+    }
   },
   "exclude": [
     "**/node_modules/**",
@@ -41,7 +56,7 @@
     "electron.vite.config.ts",
     "package.json",
     "typings",
-    "src/**/*.ts",
+    "src",
     "resources"
   ]
 }
